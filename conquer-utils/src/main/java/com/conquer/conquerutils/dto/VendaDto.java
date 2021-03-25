@@ -8,6 +8,8 @@ import lombok.Data;
 @Data
 public class VendaDto {
 
+	private String codigoVenda;
+	
 	private AlunoDto aluno;
 	
 	private Double valorVenda;
