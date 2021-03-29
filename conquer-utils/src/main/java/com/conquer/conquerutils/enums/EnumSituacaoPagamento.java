@@ -21,7 +21,7 @@ public enum EnumSituacaoPagamento {
 			System.out.println(e.getMessage());
 		}	
 	}
-
+	
 	public String getDescricao() {
 		return descricao;
 	}
@@ -29,4 +29,5 @@ public enum EnumSituacaoPagamento {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
+
 }

@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 
@@ -14,12 +15,11 @@ import com.conquer.conquerutils.dto.MensagemRetorno;
 
 public class UtilHttp {
 	
-	private String method;
-	
-	private String url;
-	
-
 	public static MensagemRetorno enviarGet(String url) {
+		return enviarGet(url, null);
+	}
+	
+	public static MensagemRetorno enviarGet(String url, Map<String, String> properties) {
 			
 		MensagemRetorno mensagemRetorno = new MensagemRetorno();
 		mensagemRetorno.setStatusHttp(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -29,7 +29,13 @@ public class UtilHttp {
 			
 			HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
 			conn.setRequestMethod("GET");
-			conn.setRequestProperty("Accept", "application/json");
+			conn.setRequestProperty("Accept", "*/*");
+			 
+			if(properties != null) {
+				for (Map.Entry<String, String> entry : properties.entrySet()) {
+					conn.setRequestProperty(entry.getKey(), entry.getValue());
+				}
+			}
 			
 			mensagemRetorno.setStatusHttp(conn.getResponseCode());
 			
@@ -57,5 +63,26 @@ public class UtilHttp {
 		}
 		
 		return mensagemRetorno;
+	}
+	
+	public static String montarURl(String urlBase, Map<String, String> parametros) {
+		String urlRetorno = urlBase;
+		boolean remove = false;
+		
+		if(parametros != null && parametros.size()>0) {
+			urlRetorno += "?";
+			
+			for (Map.Entry<String, String> entry : parametros.entrySet()) {
+				urlRetorno += entry.getKey() + "=" + entry.getValue();
+				urlRetorno += "&";
+				remove = true;
+			}
+			if(remove) {
+				urlRetorno = urlRetorno.substring(0, urlRetorno.length()-1);
+			}
+			
+		}
+		
+		return urlRetorno;
 	}
 }
